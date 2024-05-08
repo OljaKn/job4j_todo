@@ -101,11 +101,12 @@ public class SimpleTaskStore implements TaskStore {
     }
 
     @Override
-    public List<Task> completedTasks() {
+    public List<Task> completedTasks(boolean b) {
         Session session = sf.openSession();
         try {
             session.beginTransaction();
-            List<Task> tasks = session.createQuery("FROM Task WHERE done = true", Task.class).list();
+            List<Task> tasks = session.createQuery("FROM Task WHERE done = :d", Task.class)
+                    .setParameter("d", b).list();
             session.getTransaction().commit();
             return tasks;
         } catch (Exception e) {
@@ -113,22 +114,7 @@ public class SimpleTaskStore implements TaskStore {
         } finally {
             session.close();
         }
-        return new ArrayList<>();
+        return null;
     }
 
-    @Override
-    public List<Task> newTasks() {
-        Session session = sf.openSession();
-        try {
-            session.beginTransaction();
-            List<Task> tasks = session.createQuery("FROM Task WHERE created > NOW() - INTERVAL '12 hour'", Task.class).list();
-            session.getTransaction().commit();
-            return tasks;
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
-        return new ArrayList<>();
-    }
 }

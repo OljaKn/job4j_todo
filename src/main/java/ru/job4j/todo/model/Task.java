@@ -13,6 +13,6 @@ public class Task {
     private int id;
     private String title;
     private String description;
-    LocalDateTime created;
+    LocalDateTime created = LocalDateTime.now();
     private boolean done;
 }

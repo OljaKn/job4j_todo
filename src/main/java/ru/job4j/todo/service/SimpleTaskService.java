@@ -24,8 +24,8 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
-    public void delete(int id) {
-        taskStore.delete(id);
+    public boolean delete(int id) {
+       return taskStore.delete(id);
     }
 
     @Override
@@ -39,12 +39,7 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
-    public List<Task> completedTasks() {
-        return taskStore.completedTasks();
-    }
-
-    @Override
-    public List<Task> newTasks() {
-        return taskStore.newTasks();
+    public List<Task> completedTasks(boolean b) {
+        return taskStore.completedTasks(b);
     }
 }

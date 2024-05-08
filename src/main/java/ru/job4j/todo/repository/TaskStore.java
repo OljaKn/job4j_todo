@@ -11,6 +11,5 @@ public interface TaskStore {
     boolean delete(int id);
     Optional<Task> findById(int id);
     List<Task> getAll();
-    List<Task> completedTasks();
-    List<Task> newTasks();
+    List<Task> completedTasks(boolean b);
 }
