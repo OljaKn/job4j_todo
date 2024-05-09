@@ -47,6 +47,25 @@ public class SimpleTaskStore implements TaskStore {
     }
 
     @Override
+    public boolean updateStatus(int id) {
+        Session session = sf.openSession();
+        try {
+            session.beginTransaction();
+            session.createQuery(
+                            "UPDATE Task SET done = true WHERE id = :id")
+                    .setParameter("id", id)
+                    .executeUpdate();
+            session.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+        } finally {
+            session.close();
+        }
+        return false;
+    }
+
+    @Override
     public boolean delete(int id) {
         Session session = sf.openSession();
         try {

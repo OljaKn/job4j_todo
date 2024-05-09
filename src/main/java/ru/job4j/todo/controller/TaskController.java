@@ -28,13 +28,8 @@ public class TaskController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute Task task, Model model) {
-        try {
             taskService.save(task);
             return "redirect:/tasks";
-        } catch (Exception exception) {
-            model.addAttribute("message", exception.getMessage());
-            return "errors/404";
-        }
     }
 
     @GetMapping("/completed")
@@ -50,19 +45,19 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public String getById(Model model, @PathVariable int id, HttpServletRequest request) {
+    public String getById(Model model, @PathVariable int id) {
         var task = taskService.findById(id);
-        model.addAttribute("task", task.get());
-        var session = request.getSession();
-        session.setAttribute("task", task.get());
+        if (task.isEmpty()) {
+            model.addAttribute("message", "Задача не найдена");
+            return "errors/404";
+        }
+            model.addAttribute("task", task.get());
         return "tasks/one";
     }
 
    @GetMapping("isDone/{id}")
    public String doneTask(@PathVariable int id) {
-        var task = taskService.findById(id).get();
-        task.setDone(true);
-        taskService.update(task);
+        taskService.updateStatus(id);
         return "redirect:/tasks";
    }
 
@@ -78,8 +73,12 @@ public class TaskController {
 
     @GetMapping("/update/{id}")
     public String getUpdatedPage(Model model, @PathVariable int id) {
-        var task = taskService.findById(id).get();
-        model.addAttribute("task", task);
+        var task = taskService.findById(id);
+        if (task.isEmpty()) {
+            model.addAttribute("messege", "Задача не найдена");
+            return "errors/404";
+        }
+        model.addAttribute("task", task.get());
         return "tasks/updated";
     }
 

@@ -24,6 +24,11 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
+    public boolean updateStatus(int id) {
+        return taskStore.updateStatus(id);
+    }
+
+    @Override
     public boolean delete(int id) {
        return taskStore.delete(id);
     }
