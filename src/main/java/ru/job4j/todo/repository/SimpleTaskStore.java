@@ -8,31 +8,23 @@ import ru.job4j.todo.model.Task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
 public class SimpleTaskStore implements TaskStore {
-    private final SessionFactory sf;
+    private final CrudRepository crudRepository;
 
     @Override
     public Task save(Task task) {
-        Session session = sf.openSession();
-        try {
-            session.beginTransaction();
-            session.save(task);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
+        crudRepository.run(session -> session.persist(task));
         return task;
     }
 
     @Override
     public boolean update(Task task) {
-        boolean rsl = false;
+       /* boolean rsl = false;
         Session session = sf.openSession();
         try {
             session.beginTransaction();
@@ -47,13 +39,19 @@ public class SimpleTaskStore implements TaskStore {
             session.getTransaction().rollback();
         } finally {
             session.close();
-        }
-        return rsl;
+        }*/
+        return crudRepository.tx(session -> session.createQuery(
+                        "UPDATE Task SET title = :title, description = :description, done = :done WHERE id = :id")
+                .setParameter("title", task.getTitle())
+                .setParameter("description", task.getDescription())
+                .setParameter("done", task.isDone())
+                .setParameter("id", task.getId())
+                .executeUpdate() > 0);
     }
 
     @Override
     public boolean updateStatus(int id) {
-        boolean rsl = false;
+        /*boolean rsl = false;
         Session session = sf.openSession();
         try {
             session.beginTransaction();
@@ -67,12 +65,16 @@ public class SimpleTaskStore implements TaskStore {
         } finally {
             session.close();
         }
-        return rsl;
+        return rsl;*/
+        return crudRepository.tx(session -> session.createQuery(
+                        "UPDATE Task SET done = true WHERE id = :id")
+                .setParameter("id", id)
+                .executeUpdate() > 0);
     }
 
     @Override
     public boolean delete(int id) {
-        boolean rsl = false;
+        /*boolean rsl = false;
         Session session = sf.openSession();
         try {
             session.beginTransaction();
@@ -86,12 +88,16 @@ public class SimpleTaskStore implements TaskStore {
         } finally {
             session.close();
         }
-        return rsl;
+        return rsl;*/
+        return crudRepository.tx(session -> session.createQuery(
+                        "DELETE Task WHERE id = :Id")
+                .setParameter("Id", id)
+                .executeUpdate() > 0);
     }
 
     @Override
     public Optional<Task> findById(int id) {
-        Session session = sf.openSession();
+        /*Session session = sf.openSession();
         try {
             session.beginTransaction();
             Optional<Task> query = session.createQuery(
@@ -104,13 +110,14 @@ public class SimpleTaskStore implements TaskStore {
             session.getTransaction().rollback();
         } finally {
             session.close();
-        }
-        return Optional.empty();
+        }*/
+        return crudRepository.optional("FROM Task WHERE id = :id", Task.class,
+                Map.of("id", id));
     }
 
     @Override
     public List<Task> getAll() {
-        Session session = sf.openSession();
+        /*Session session = sf.openSession();
         try {
             session.beginTransaction();
             List<Task> tasks = session.createQuery("FROM Task ORDER BY id", Task.class).list();
@@ -120,13 +127,13 @@ public class SimpleTaskStore implements TaskStore {
             session.getTransaction().rollback();
         } finally {
             session.close();
-        }
-        return new ArrayList<>();
+        }*/
+        return crudRepository.query("FROM Task ORDER BY id", Task.class);
     }
 
     @Override
     public List<Task> completedTasks(boolean b) {
-        Session session = sf.openSession();
+        /*Session session = sf.openSession();
         try {
             session.beginTransaction();
             List<Task> tasks = session.createQuery("FROM Task WHERE done = :d", Task.class)
@@ -137,8 +144,9 @@ public class SimpleTaskStore implements TaskStore {
             session.getTransaction().rollback();
         } finally {
             session.close();
-        }
-        return null;
+        }*/
+        return crudRepository.query("FROM Task WHERE done = :d", Task.class,
+                Map.of("d", b));
     }
 
 }
