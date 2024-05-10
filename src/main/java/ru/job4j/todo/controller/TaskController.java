@@ -55,8 +55,12 @@ public class TaskController {
     }
 
    @GetMapping("isDone/{id}")
-   public String doneTask(@PathVariable int id) {
-        taskService.updateStatus(id);
+   public String doneTask(@PathVariable int id, Model model) {
+        boolean isUpdateed = taskService.updateStatus(id);
+        if (!isUpdateed) {
+            model.addAttribute("message", "Не удалось обновить статус");
+            return "errors/404";
+        }
         return "redirect:/tasks";
    }
 
@@ -82,8 +86,13 @@ public class TaskController {
     }
 
     @PostMapping("/update")
-    public String updateTask(@ModelAttribute Task task) {
-        taskService.update(task);
+    public String updateTask(@ModelAttribute Task task, Model model) {
+        boolean isUpdateed = taskService.update(task);
+        if (!isUpdateed) {
+            model.addAttribute("message", "Не удалось обновить задачу");
+            return "errors/404";
+        }
+
         return "redirect:/tasks";
     }
 }

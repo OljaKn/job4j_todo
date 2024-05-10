@@ -32,56 +32,61 @@ public class SimpleTaskStore implements TaskStore {
 
     @Override
     public boolean update(Task task) {
+        boolean rsl = false;
         Session session = sf.openSession();
         try {
             session.beginTransaction();
-            session.update(task);
+            rsl = session.createQuery("UPDATE Task SET title = :title, description = :description, done = :done WHERE id = :id")
+                    .setParameter("title", task.getTitle())
+                    .setParameter("description", task.getDescription())
+                    .setParameter("done", task.isDone())
+                    .setParameter("id", task.getId())
+                    .executeUpdate() > 0;
             session.getTransaction().commit();
-            return true;
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
             session.close();
         }
-        return false;
+        return rsl;
     }
 
     @Override
     public boolean updateStatus(int id) {
+        boolean rsl = false;
         Session session = sf.openSession();
         try {
             session.beginTransaction();
-            session.createQuery(
+           rsl = session.createQuery(
                             "UPDATE Task SET done = true WHERE id = :id")
                     .setParameter("id", id)
-                    .executeUpdate();
+                    .executeUpdate() > 0;
             session.getTransaction().commit();
-            return true;
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
             session.close();
         }
-        return false;
+        return rsl;
     }
 
     @Override
     public boolean delete(int id) {
+        boolean rsl = false;
         Session session = sf.openSession();
         try {
             session.beginTransaction();
-            session.createQuery(
+            rsl = session.createQuery(
                             "DELETE Task WHERE id = :Id")
                     .setParameter("Id", id)
-                    .executeUpdate();
+                    .executeUpdate() > 0;
             session.getTransaction().commit();
-            return true;
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
             session.close();
         }
-        return false;
+        return rsl;
     }
 
     @Override
