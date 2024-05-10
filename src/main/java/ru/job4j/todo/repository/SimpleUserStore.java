@@ -19,12 +19,13 @@ public class SimpleUserStore implements UserStore {
             session.beginTransaction();
             session.save(user);
             session.getTransaction().commit();
+            return Optional.of(user);
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
             session.close();
         }
-        return Optional.ofNullable(user);
+        return Optional.empty();
     }
 
     @Override
