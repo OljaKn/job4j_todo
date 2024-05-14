@@ -8,9 +8,6 @@ import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.TaskService;
 
-import javax.servlet.http.HttpSession;
-
-
 @Controller
 @AllArgsConstructor
 @RequestMapping("/tasks")
