@@ -25,6 +25,7 @@
                 <th scope="col">Дата создания</th>
                 <th scope="col">Состояние задачи</th>
                 <th scope="col">Приоритет</th>
+                <th scope="col">Категория</th>
             </tr>
             </thead>
             <tbody>
@@ -39,6 +40,7 @@
                         <i class="bi bi-square"></i></span>
                 </td>
                 <td th:text="${task.priority.name}" />
+                <td th:text="${task.categories}" />
             </tr>
             </tbody>
          </table>

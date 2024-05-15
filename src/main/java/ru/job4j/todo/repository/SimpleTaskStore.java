@@ -57,7 +57,7 @@ public class SimpleTaskStore implements TaskStore {
 
     @Override
     public List<Task> getAll() {
-        return crudRepository.query("FROM Task task JOIN FETCH task.priority ORDER BY task.id", Task.class);
+        return crudRepository.query("FROM Task task JOIN FETCH task.priority JOIN FETCH task.categories ORDER BY task.id", Task.class);
     }
 
     @Override
