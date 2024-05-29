@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.UserService;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import static ru.job4j.todo.utilclass.TimeZoneUtil.getTimeZones;
 
 @Controller
 @RequestMapping("/users")
@@ -30,7 +33,9 @@ public class UserController {
     }
 
     @GetMapping("/register")
-    public String getRegistrationPage() {
+    public String getRegistrationPage(Model model) {
+        model.addAttribute("timeZones", getTimeZones());
+        model.addAttribute("zoneDefault", TimeZone.getDefault().getID());
         return "users/register";
     }
 

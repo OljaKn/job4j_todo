@@ -10,7 +10,10 @@ import ru.job4j.todo.service.CategoryService;
 import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
+
+import static ru.job4j.todo.utilclass.TimeZoneUtil.timeZoneList;
 
 @Controller
 @AllArgsConstructor
@@ -21,8 +24,9 @@ public class TaskController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public String getAll(Model model) {
-        model.addAttribute("tasks", taskService.getAll());
+    public String getAll(Model model, HttpSession session) {
+        var user = session.getAttribute("user");
+        model.addAttribute("tasks", timeZoneList((User) user, taskService.getAll()));
         return "tasks/list";
     }
 

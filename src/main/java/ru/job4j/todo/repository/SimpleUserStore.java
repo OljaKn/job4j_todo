@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.User;
 
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+
 @Repository
 @AllArgsConstructor
 public class SimpleUserStore implements UserStore {
