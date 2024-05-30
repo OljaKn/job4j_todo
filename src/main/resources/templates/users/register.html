@@ -28,7 +28,7 @@
         <label for="timezone"><b></b></label>
         <select class="form-control" id="timezone" name="timezone">
             <option th:value="${zoneDefault}">Укажите часовой пояс</option>
-            <option th:each="timezone : ${timeZones}" th:value="${timezone.getId}" th:text="${timezone.getId}"></option>
+            <option th:each="timezone : ${timeZones}" th:value="${timezone.ID}" th:text="${timezone.ID}"></option>
         </select>
     </div>
 <div class="mb-3 row">
